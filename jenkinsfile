@@ -1,15 +1,28 @@
 pipeline {
     agent any
     stages {
-         stage("Compile") {
-             steps {
-                  sh "./gradlew compileJava"
+        stage('Checkout') {
+            steps {
+                    git url: 'https://github.com/Marilin144/calculator33', branch: "main"
             }
+        }       
+        stage('Compile') {
+            steps {
+                    sh "./gradlew compileJava"
+            }
+        }
+        stage("Unit test") {
+            steps {
+                   sh "./gradlew test"
+            }
+        }
+        
+        stage("Code coverage") {
+            steps {
+                    sh "./gradlew jacocoTestReport"
+                    sh "./gradlew jacocoTestCoverageVerification"
+                }
+        }
 
-           stage("Unit test") {
-               steps {
-                    sh "./gradlew test"
-               }
-           }
-   } 
+    }
 }
